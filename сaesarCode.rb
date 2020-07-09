@@ -1,7 +1,5 @@
 def encrypt(shift)
-  file = File.new("text.txt", "r:UTF-8")
-  text = file.read
-  letters = text.chars
+  letters = File.new("text.txt", "r:UTF-8").read.chars
   letters = letters.map do |x| 
     if(x != " " && x != "\n")
       ((x.ord + shift) < 123 ? (x.ord + shift) : (x.ord + shift) - 26).chr
