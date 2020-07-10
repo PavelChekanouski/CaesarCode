@@ -1,39 +1,36 @@
 class CaesarCode
   
-  @shift
-  
+  attr_reader :shift 
+
   def initialize(shift)
     @shift = shift
   end
 
-  def get_shift
-    @shift
-  end
-
-  def decrypt()
-    letters = File.new("encrypted_text.txt", "r:UTF-8").read.chars
+  def decrypt(input_file_name, output_file_name)
+    letters = File.new(input_file_name, "r:UTF-8").read.chars
     letters = letters.map do |x|
       case x.ord
-        when 65..90 then ((x.ord - self.get_shift) > 64 ? (x.ord - self.get_shift) : (x.ord - self.get_shift) + 26).chr
-        when 97..122 then ((x.ord - self.get_shift) > 96 ? (x.ord - self.get_shift) : (x.ord - self.get_shift) + 26).chr
+        when 65..90 then ((x.ord - self.shift) > 64 ? (x.ord - self.shift) : (x.ord - self.shift) + 26).chr
+        when 97..122 then ((x.ord - self.shift) > 96 ? (x.ord - self.shift) : (x.ord - self.shift) + 26).chr
         when " ".ord then x
         when "\n".ord then x
       end
     end  
-    File.open("decrypted_text.txt", "w:UTF-8") { |file| file.write(letters.join()) }
+    File.open(output_file_name, "w:UTF-8") { |file| file.write(letters.join()) }
     puts "Decryption done"
   end
 
-  def encrypt()
-  letters = File.new("text.txt", "r:UTF-8").read.chars
+  def encrypt(input_file_name, output_file_name)
+  letters = File.new(input_file_name, "r:UTF-8").read.chars
   letters = letters.map do |x| 
-    if(x != " " && x != "\n")
-      ((x.ord + self.get_shift) < 123 ? (x.ord + self.get_shift) : (x.ord + self.get_shift) - 26).chr
-    else
-      x
-    end
+    case x.ord
+        when 65..90 then ((x.ord + self.shift) < 91 ? (x.ord + self.shift) : (x.ord + self.shift) - 26).chr
+        when 97..122 then ((x.ord + self.shift) < 123 ? (x.ord + self.shift) : (x.ord + self.shift) - 26).chr
+        when " ".ord then x
+        when "\n".ord then x
+      end
   end  
-  File.open("encrypted_text.txt", "w:UTF-8") { |file| file.write(letters.join()) }
+  File.open(output_file_name, "w:UTF-8") { |file| file.write(letters.join()) }
   puts "Encryption done"
   end
 
